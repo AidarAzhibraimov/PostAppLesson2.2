@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
+    id 'androidx.navigation.safeargs'
 }
+
 
 android {
     compileSdk 31

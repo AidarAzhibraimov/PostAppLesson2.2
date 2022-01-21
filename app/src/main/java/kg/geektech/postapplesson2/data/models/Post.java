@@ -2,16 +2,19 @@ package kg.geektech.postapplesson2.data.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Post {
+import java.io.Serializable;
+import java.util.HashMap;
+
+public class Post implements Serializable {
     int id;
     String title;
     String content;
     @SerializedName("user")
-    int userId;
+    HashMap<Integer,String> userId;
     @SerializedName("group")
     int groupId;
 
-    public Post(String title, String content, int userId, int groupId) {
+    public Post(String title, String content, HashMap<Integer, String> userId, int groupId) {
         this.title = title;
         this.content = content;
         this.userId = userId;
@@ -42,11 +45,11 @@ public class Post {
         this.content = content;
     }
 
-    public int getUserId() {
+    public HashMap<Integer, String> getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(HashMap<Integer, String> userId) {
         this.userId = userId;
     }
 

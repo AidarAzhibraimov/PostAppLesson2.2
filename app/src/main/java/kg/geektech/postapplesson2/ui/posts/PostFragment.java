@@ -1,5 +1,7 @@
 package kg.geektech.postapplesson2.ui.posts;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,6 +32,8 @@ public class PostFragment extends Fragment {
     private FragmentPostBinding binding;
     private NavController controller;
 
+    private List<Post> posts;
+
     public PostFragment() {
     }
 
@@ -49,23 +53,61 @@ public class PostFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.recycler.setAdapter(adapter);
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        binding.fab.setOnClickListener(v -> controller.navigate(R.id.action_postFragment_to_formFragment));
+
+        adapter.setListener(new OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                controller.navigate(R.id.action_postFragment_to_formFragment);
+            public void onClick(Post post) {
+                controller.navigate(PostFragmentDirections.actionPostFragmentToFormFragment(post));
+            }
+
+            @Override
+            public void onLongClick(Post post, int position) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                alert.setTitle("Удалить публикацию?");
+                alert.setMessage("Вы действительное ходите удалить публикацию?");
+                alert.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        posts.remove(post);
+                        adapter.setPosts(posts);
+                        App.api.deletePost(post.getId()).enqueue(new Callback<Post>() {
+                            @Override
+                            public void onResponse(Call<Post> call, Response<Post> response) {
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<Post> call, Throwable t) {
+
+                            }
+                        });
+                    }
+                });
+                alert.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = alert.create();
+                dialog.show();
             }
         });
+
         App.api.getPosts().enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
                 if (response.isSuccessful() && response.body() != null ){
+                    posts = response.body();
                     adapter.setPosts(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-
+                System.out.println(t.getLocalizedMessage());
             }
         });
     }

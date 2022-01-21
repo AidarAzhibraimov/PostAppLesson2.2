@@ -15,6 +15,12 @@ import kg.geektech.postapplesson2.databinding.ItemPostBinding;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
+    private OnItemClickListener listener;
+
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     private List<Post> posts = new ArrayList<>();
 
     public void setPosts(List<Post> posts) {
@@ -37,6 +43,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         holder.onBind(posts.get(position));
 
+        holder.itemView.setOnClickListener(v -> listener.onClick(posts.get(position)));
+        holder.itemView.setOnLongClickListener(v -> {
+            listener.onLongClick(posts.get(position),position);
+            return true;
+        });
     }
 
     @Override
@@ -44,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return posts.size();
     }
 
-    protected class PostViewHolder extends RecyclerView.ViewHolder {
+    protected static class PostViewHolder extends RecyclerView.ViewHolder {
         private ItemPostBinding binding;
         public PostViewHolder(@NonNull ItemPostBinding binding) {
             super(binding.getRoot());
@@ -52,7 +63,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         public void onBind(Post post) {
-            binding.tvUserId.setText(String.valueOf(post.getUserId()));
+            binding.tvUserId.setText(post.getUserId().get(14));
             binding.tvTitle.setText(post.getTitle());
             binding.tvContent.setText(post.getContent());
         }
