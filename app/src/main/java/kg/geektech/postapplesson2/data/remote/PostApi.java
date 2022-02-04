@@ -32,4 +32,5 @@ public interface PostApi {
     Call<Post> deletePost(
             @Path("postId") int postId
     );
+
 }

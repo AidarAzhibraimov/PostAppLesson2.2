@@ -10,16 +10,17 @@ public class Post implements Serializable {
     String title;
     String content;
     @SerializedName("user")
-    HashMap<Integer,String> userId;
+    String userId;
     @SerializedName("group")
     int groupId;
 
-    public Post(String title, String content, HashMap<Integer, String> userId, int groupId) {
+    public Post(String title, String content, String userId, int groupId) {
         this.title = title;
         this.content = content;
         this.userId = userId;
         this.groupId = groupId;
     }
+
 
     public int getId() {
         return id;
@@ -45,11 +46,11 @@ public class Post implements Serializable {
         this.content = content;
     }
 
-    public HashMap<Integer, String> getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(HashMap<Integer, String> userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

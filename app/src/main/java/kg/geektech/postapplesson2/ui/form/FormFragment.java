@@ -24,8 +24,7 @@ public class FormFragment extends Fragment {
 
     private FragmentFormBinding binding;
     private static final int groupId = 38;
-    private static final int userId = 14;
-    private static final HashMap<Integer, String> hashMap = new HashMap<>();
+    private static final String userId = "Azhibraimov";
 
 
     private Post post;
@@ -55,14 +54,13 @@ public class FormFragment extends Fragment {
         }
 
         binding.btnSend.setOnClickListener(v -> {
-            hashMap.put(userId,"Aidar");
             if (post == null) {
                 String title = binding.etTitle.getText().toString();
                 String content = binding.etContent.getText().toString();
                 Post post = new Post(
                         title,
                         content,
-                        hashMap,
+                        userId,
                         groupId
                 );
                 App.api.createPost(post).enqueue(new Callback<Post>() {
@@ -84,7 +82,7 @@ public class FormFragment extends Fragment {
                 Post post = new Post(
                         title,
                         content,
-                        hashMap,
+                        userId,
                         groupId
                 );
                 post.setId(this.post.getId());
